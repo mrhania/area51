@@ -1,6 +1,6 @@
 
-car-rental: car-rental.hs
-	ghc $< -o $@
+car-rental:
+	cd src/; ghc --make CarRental.hs -odir ../build/ -o ../$@; cd ..
 
 clean:
-	rm -f car-rental *.hi *.o
+	rm -rf build car-rental

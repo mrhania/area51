@@ -1,10 +1,11 @@
-module Interface where
+module CarRental.Interface where
 
 import Database.HDBC
 import Graphics.UI.Gtk
 
-import Models
-import Queries
+import CarRental.Models
+import CarRental.Queries
+
 
 -- Ekran startowy: tutaj wybieramy rodzaj logowania i przechodzimy do innych.
 showStartScreen :: IConnection conn => conn -> IO ()
@@ -108,20 +109,17 @@ showAdminScreen conn = do
         
         colNames <- treeViewColumnNew
         colMails <- treeViewColumnNew
-        treeViewColumnSetTitle colNames "Nazwisko"
-        treeViewColumnSetTitle colMails "E-mail"
 
-        cellLayoutSetAttributes colNames renderer clientsStore
-            (\client -> [ cellText := clientName client ] )
-        cellLayoutSetAttributes colMails renderer clientsStore
-            (\client -> [ cellText := clientEmail client ])
-        
         let clientColumns = [colNames, colMails]
         mapM_ (uncurry treeViewColumnSetTitle) $
             zip clientColumns ["Nazwisko", "E-mail"]
         mapM_ (\col -> cellLayoutPackStart col renderer False) clientColumns
         mapM_ (treeViewAppendColumn clientsView) clientColumns
 
+        cellLayoutSetAttributes colNames renderer clientsStore $
+            (\client -> [ cellText := clientName client ] )
+        cellLayoutSetAttributes colMails renderer clientsStore $
+            (\client -> [ cellText := clientEmail client ])
 
         addClientBox <- createAddClientBox clientsStore
 
@@ -179,21 +177,21 @@ showAdminScreen conn = do
         colCapacity <- treeViewColumnNew
         colType     <- treeViewColumnNew
         colMaxP     <- treeViewColumnNew
-        
-        cellLayoutSetAttributes colBrands renderer carsStore
-            (\car -> [ cellText := carBrand car ])
-        cellLayoutSetAttributes colCapacity renderer carsStore
-            (\car -> [ cellText := show $ carBrand car ])
-        cellLayoutSetAttributes colType renderer carsStore
-            (\car -> [ cellText := carEngineType car ])
-        cellLayoutSetAttributes colMaxP renderer carsStore
-            (\car -> [ cellText := show $ carMaxPeople car ] )
 
         let carColumns = [colBrands, colCapacity, colType, colMaxP]
         mapM_ (uncurry treeViewColumnSetTitle) $
             zip carColumns ["Marka", "Pojemność", "Typ silnika", "Pasażerów"]
         mapM_ (\col -> cellLayoutPackStart col renderer False) carColumns
         mapM_ (treeViewAppendColumn carsView) carColumns
+        
+        cellLayoutSetAttributes colBrands renderer carsStore $
+            (\car -> [ cellText := carBrand car ])
+        cellLayoutSetAttributes colCapacity renderer carsStore $
+            (\car -> [ cellText := show $ carBrand car ])
+        cellLayoutSetAttributes colType renderer carsStore $
+            (\car -> [ cellText := carEngineType car ])
+        cellLayoutSetAttributes colMaxP renderer carsStore $
+            (\car -> [ cellText := show $ carMaxPeople car ] )
 
         boxPackStart carsTab carsView PackGrow 0
 

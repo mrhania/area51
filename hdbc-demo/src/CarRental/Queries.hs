@@ -1,8 +1,9 @@
-module Queries where
+module CarRental.Queries where
 
 import Database.HDBC
 
-import Models
+import CarRental.Models
+
 
 -- Zwraca klienta odpowiadającego zadanemu loginowi i hasłu (haśle?).
 loginClient :: IConnection conn => conn

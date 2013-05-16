@@ -1,6 +1,7 @@
-module Models where
+module CarRental.Models where
 
 import Database.HDBC.SqlValue
+
 
 -- Typ repezentujący klienta, zgodny z tym co siedzi w bazie danych.
 data Client = Client { clientId :: Int
@@ -8,7 +9,7 @@ data Client = Client { clientId :: Int
                      , clientPhone :: Integer
                      , clientEmail :: String
                      , clientAddress :: String
-                     }
+                     } deriving Show
 
 clientFromSqlRow :: [SqlValue] -> Client
 clientFromSqlRow [cid, cname, cphone, cemail, caddr] =
@@ -34,7 +35,7 @@ data Car = Car { carId :: Int
                , carCapacity :: Int
                , carEngineType :: String
                , carMaxPeople :: Int
-               }
+               } deriving Show
 
 carFromSqlRow :: [SqlValue] -> Car
 carFromSqlRow [cid, cbrand, ccap, cetype, cmaxp] =
